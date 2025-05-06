@@ -30,6 +30,15 @@ const bruteTime = document.getElementById('brute-time');
 const bruteAttempts = document.getElementById('brute-attempts');
 const bruteCracked = document.getElementById('brute-cracked');
 
+// API Check elements
+const apiCheckBtn = document.getElementById('api-check-btn');
+const apiResultBox = document.getElementById('apiResultBox');
+const apiStrength = document.getElementById('api-strength');
+const apiFeedbackList = document.getElementById('api-feedback-list');
+const apiSuggestionBox = document.getElementById('api-suggestion-box');
+const apiSuggestion = document.getElementById('api-suggestion');
+const apiCopyBtn = document.getElementById('api-copy-btn');
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Add event listeners
@@ -43,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Brute force test
     runBruteForceBtn.addEventListener('click', runBruteForceTest);
+    
+    // API Check
+    apiCheckBtn.addEventListener('click', checkPasswordWithAPI);
+    apiCopyBtn.addEventListener('click', copyApiSuggestion);
     
     // Disable the brute force button if no password
     checkBruteForceButtonState();
@@ -376,4 +389,87 @@ function showBruteForceError() {
     bruteTime.textContent = 'N/A';
     bruteAttempts.textContent = 'N/A';
     bruteCracked.textContent = 'N/A';
+}
+
+/**
+ * Check password with the external API
+ */
+async function checkPasswordWithAPI() {
+    const password = passwordInput.value.trim();
+    
+    if (!password) {
+        alert('Please enter a password first');
+        return;
+    }
+    
+    apiCheckBtn.disabled = true;
+    apiCheckBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+    
+    try {
+        const res = await fetch(`${API_BASE_URL}/check-strength`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password })
+        });
+
+        const data = await res.json();
+        
+        // Clear previous strength classes
+        apiStrength.classList.remove("strength-weak", "strength-medium", "strength-strong");
+        apiStrength.textContent = data.strength;
+        
+        // Add appropriate class based on strength
+        if (data.strength.toLowerCase() === "weak") {
+            apiStrength.classList.add("strength-weak");
+        } else if (data.strength.toLowerCase() === "medium") {
+            apiStrength.classList.add("strength-medium");
+        } else if (data.strength.toLowerCase() === "strong") {
+            apiStrength.classList.add("strength-strong");
+        }
+
+        apiFeedbackList.innerHTML = "";
+        if (data.feedback && data.feedback.length) {
+            data.feedback.forEach(msg => {
+                const li = document.createElement("li");
+                li.textContent = msg;
+                apiFeedbackList.appendChild(li);
+            });
+        }
+
+        apiResultBox.classList.remove("hidden");
+
+        if (data.suggestion) {
+            apiSuggestion.textContent = data.suggestion;
+            apiSuggestionBox.classList.remove("hidden");
+        } else {
+            apiSuggestionBox.classList.add("hidden");
+        }
+    } catch (error) {
+        console.error("Error checking password strength:", error);
+        alert("Failed to check password strength with API");
+    } finally {
+        apiCheckBtn.disabled = false;
+        apiCheckBtn.innerHTML = '<i class="fas fa-server"></i> Check with API';
+    }
+}
+
+/**
+ * Copy API suggestion to clipboard
+ */
+function copyApiSuggestion() {
+    const suggestion = apiSuggestion.textContent;
+    if (!suggestion) return;
+    
+    navigator.clipboard.writeText(suggestion)
+        .then(() => {
+            const originalText = apiCopyBtn.textContent;
+            apiCopyBtn.textContent = '✓ Copied!';
+            setTimeout(() => {
+                apiCopyBtn.textContent = originalText;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy password to clipboard');
+        });
 }

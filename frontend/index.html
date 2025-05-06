@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Strength Tester</title>
+    <title>Password Strength Analyzer</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Password Strength Analyzer</h1>
+            <h1>🔐 Password Strength Analyzer</h1>
             <p>Test your password's strength and see how quickly it could be cracked</p>
         </header>
 
@@ -38,6 +39,7 @@
                 <div class="tabs">
                     <button class="tab-button active" data-tab="strength">Strength Analysis</button>
                     <button class="tab-button" data-tab="brute-force">Brute Force Test</button>
+                    <button class="tab-button" data-tab="api-check">API Check</button>
                 </div>
 
                 <div class="tab-content" id="strength-tab">
@@ -144,11 +146,29 @@
                         <span>Attempting to crack password...</span>
                     </div>
                 </div>
+
+                <div class="tab-content hidden" id="api-check-tab">
+                    <div class="api-check-section">
+                        <button id="api-check-btn" class="api-check-button">
+                            <i class="fas fa-server"></i> Check with API
+                        </button>
+                        
+                        <div class="api-result hidden" id="apiResultBox">
+                            <p><strong>Strength:</strong> <span id="api-strength"></span></p>
+                            <ul id="api-feedback-list"></ul>
+                            <div id="api-suggestion-box" class="api-suggestion hidden">
+                                <p><strong>Suggested password:</strong></p>
+                                <code id="api-suggestion"></code>
+                                <button id="api-copy-btn">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <footer>
-            <p>Password Strength Tester &copy; 2025</p>
+            <p>Password Strength Analyzer &copy; 2025</p>
         </footer>
     </div>
 

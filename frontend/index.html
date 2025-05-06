@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Tester</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Password Strength Analyzer</h1>
+            <p>Test your password's strength and see how quickly it could be cracked</p>
+        </header>
+
+        <div class="card">
+            <div class="password-input-section">
+                <div class="password-field">
+                    <label for="password">Enter a password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="password" placeholder="Enter your password" autofocus>
+                        <button id="toggle-password" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="strength-meter-container">
+                    <div class="strength-meter">
+                        <div class="meter-bar"></div>
+                    </div>
+                    <div class="strength-text">Enter a password</div>
+                </div>
+            </div>
+
+            <div class="results-container">
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="strength">Strength Analysis</button>
+                    <button class="tab-button" data-tab="brute-force">Brute Force Test</button>
+                </div>
+
+                <div class="tab-content" id="strength-tab">
+                    <div class="strength-details">
+                        <h3>Password Analysis</h3>
+                        <div class="analysis-grid">
+                            <div class="analysis-item">
+                                <i class="fas fa-ruler"></i>
+                                <div>
+                                    <span class="label">Length</span>
+                                    <span class="value" id="length-value">0</span>
+                                </div>
+                            </div>
+                            <div class="analysis-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <span class="label">Crack Time</span>
+                                    <span class="value" id="crack-time">-</span>
+                                </div>
+                            </div>
+                            <div class="analysis-item">
+                                <i class="fas fa-font"></i>
+                                <div>
+                                    <span class="label">Uppercase</span>
+                                    <span class="value" id="uppercase"><i class="fas fa-minus"></i></span>
+                                </div>
+                            </div>
+                            <div class="analysis-item">
+                                <i class="fas fa-font" style="font-size: 0.8em;"></i>
+                                <div>
+                                    <span class="label">Lowercase</span>
+                                    <span class="value" id="lowercase"><i class="fas fa-minus"></i></span>
+                                </div>
+                            </div>
+                            <div class="analysis-item">
+                                <i class="fas fa-hashtag"></i>
+                                <div>
+                                    <span class="label">Numbers</span>
+                                    <span class="value" id="numbers"><i class="fas fa-minus"></i></span>
+                                </div>
+                            </div>
+                            <div class="analysis-item">
+                                <i class="fas fa-at"></i>
+                                <div>
+                                    <span class="label">Symbols</span>
+                                    <span class="value" id="symbols"><i class="fas fa-minus"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="suggestions-section">
+                            <h3>Suggestions</h3>
+                            <ul id="suggestions-list">
+                                <li>Enter a password to get suggestions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="brute-force-tab">
+                    <div class="brute-force-controls">
+                        <h3>Brute Force Test</h3>
+                        <p class="warning-text">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            For security and performance reasons, only passwords up to 6 characters can be tested
+                        </p>
+                        
+                        <div class="algorithm-selection">
+                            <label>Hash Algorithm:</label>
+                            <select id="algorithm">
+                                <option value="sha256">SHA-256</option>
+                                <option value="sha1">SHA-1</option>
+                                <option value="md5">MD5</option>
+                            </select>
+                        </div>
+                        
+                        <button id="run-brute-force" class="brute-force-button">
+                            <i class="fas fa-hammer"></i> Run Brute Force Test
+                        </button>
+                    </div>
+                    
+                    <div class="brute-force-results hidden">
+                        <h3>Brute Force Results</h3>
+                        <div class="result-row">
+                            <span class="result-label">Status:</span>
+                            <span id="brute-status" class="result-value">-</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Time taken:</span>
+                            <span id="brute-time" class="result-value">-</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Attempts:</span>
+                            <span id="brute-attempts" class="result-value">-</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Cracked password:</span>
+                            <span id="brute-cracked" class="result-value">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="loader hidden">
+                        <div class="spinner"></div>
+                        <span>Attempting to crack password...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Password Strength Tester &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
